@@ -7,9 +7,9 @@ import clsx from 'clsx';
 export type OnClick = () => void;
 
 type ArrowButtonProps = {
-	isActive: boolean,
-	onClick: () => void
-}
+	isActive: boolean;
+	onClick: () => void;
+};
 
 export const ArrowButton = (props: ArrowButtonProps) => {
 	const { onClick, isActive } = props;
@@ -22,7 +22,11 @@ export const ArrowButton = (props: ArrowButtonProps) => {
 			aria-label='Открыть/Закрыть форму параметров статьи'
 			tabIndex={0}
 			className={clsx(styles.container, isActive && styles.container_open)}>
-			<img src={arrow} alt='иконка стрелочки' className={clsx(styles.arrow, isActive && styles.arrow_open)} />
+			<img
+				src={arrow}
+				alt='иконка стрелочки'
+				className={clsx(styles.arrow, isActive && styles.arrow_open)}
+			/>
 		</div>
 	);
 };

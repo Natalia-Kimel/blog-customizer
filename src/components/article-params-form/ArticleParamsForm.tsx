@@ -3,33 +3,39 @@ import { Button } from 'components/button';
 import { Select } from '../select';
 import { RadioGroup } from '../radio-group';
 import { Separator } from '../separator';
+import { Text } from '../text';
 import { useOutsideClickClose } from '../select/hooks/useOutsideClickClose';
-import { useState, useEffect, useRef, SyntheticEvent } from 'react';
-import { ArticleStateType, defaultArticleState, fontFamilyOptions, fontColors, backgroundColors, fontSizeOptions, contentWidthArr, OptionType } from 'src/constants/articleProps';
+import { useState, useRef, SyntheticEvent } from 'react';
+import {
+	ArticleStateType,
+	defaultArticleState,
+	fontFamilyOptions,
+	fontColors,
+	backgroundColors,
+	fontSizeOptions,
+	contentWidthArr,
+	OptionType,
+} from 'src/constants/articleProps';
 
 import styles from './ArticleParamsForm.module.scss';
 import clsx from 'clsx';
 
-
 type ArticleParamsFormProps = {
 	setNewAppState: (value: ArticleStateType) => void;
-}
+};
 
 export const ArticleParamsForm = (props: ArticleParamsFormProps) => {
-	const [ state, setState ] = useState(false);
+	const [isOpen, setIsOpen] = useState(false);
 
-	const [ formState, setFormState ] = useState<ArticleStateType>(defaultArticleState);
+	const [formState, setFormState] =
+		useState<ArticleStateType>(defaultArticleState);
 
 	const rootRef = useRef<HTMLDivElement | null>(null);
 
-	const handleClick = () => {
-		setState((currentState) => !currentState);
-	};
-
 	useOutsideClickClose({
-		isOpen: state,
+		isOpen: isOpen,
 		rootRef,
-		onChange: setState,
+		onChange: setIsOpen,
 	});
 
 	const handleChange = (selected: string) => {
@@ -37,7 +43,7 @@ export const ArticleParamsForm = (props: ArticleParamsFormProps) => {
 			setFormState((currentFormState) => ({
 				...currentFormState,
 				[selected]: value,
-			}))
+			}));
 		};
 	};
 
@@ -45,52 +51,64 @@ export const ArticleParamsForm = (props: ArticleParamsFormProps) => {
 		e.preventDefault();
 		setFormState(defaultArticleState);
 		props.setNewAppState(defaultArticleState);
-	}
+	};
 
 	const handleSubmit = (e: SyntheticEvent) => {
 		e.preventDefault();
-		setState(false);
+		setIsOpen(false);
 		props.setNewAppState(formState);
-	}
-	
+	};
+
 	return (
 		<div ref={rootRef}>
-			<ArrowButton isActive={state} onClick={handleClick}/>
-			<aside className={clsx(styles.container, state && styles.container_open)} >
-				<form 
+			<ArrowButton
+				isActive={isOpen}
+				onClick={() => setIsOpen((currentIsOpen) => !currentIsOpen)}
+			/>
+			<aside
+				className={clsx(styles.container, isOpen && styles.container_open)}>
+				<form
 					className={styles.form}
 					onReset={handleReset}
 					onSubmit={handleSubmit}>
+					<Text size={31} weight={800} uppercase={true}>
+						задайте параметры
+					</Text>
 					<Select
-						title={'шрифт'}
+						title='шрифт'
 						selected={formState.fontFamilyOption}
 						options={fontFamilyOptions}
-						onChange={handleChange('fontFamilyOption')}/>
+						onChange={handleChange('fontFamilyOption')}
+					/>
 					<RadioGroup
-						title={'размер шрифта'}
-						name={'fontFamilyOptions'}
+						title='размер шрифта'
+						name='fontSize'
 						options={fontSizeOptions}
 						selected={formState.fontSizeOption}
-						onChange={handleChange('fontSizeOption')}/>
+						onChange={handleChange('fontSizeOption')}
+					/>
 					<Select
-						title={'цвет шрифта'}
+						title='цвет шрифта'
 						selected={formState.fontColor}
 						options={fontColors}
-						onChange={handleChange('fontColor')}/>
-					<Separator/>
+						onChange={handleChange('fontColor')}
+					/>
+					<Separator />
 					<Select
-						title={'цвет фона'}
+						title='цвет фона'
 						selected={formState.backgroundColor}
 						options={backgroundColors}
-						onChange={handleChange('backgroundColor')}/>
+						onChange={handleChange('backgroundColor')}
+					/>
 					<Select
-						title={'ширина контента'}
+						title='ширина контента'
 						selected={formState.contentWidth}
 						options={contentWidthArr}
-						onChange={handleChange('contentWidth')}/>
+						onChange={handleChange('contentWidth')}
+					/>
 					<div className={styles.bottomContainer}>
-						<Button title='Сбросить' type='reset'/>
-						<Button title='Применить' type='submit'/>
+						<Button title='Сбросить' type='reset' />
+						<Button title='Применить' type='submit' />
 					</div>
 				</form>
 			</aside>
